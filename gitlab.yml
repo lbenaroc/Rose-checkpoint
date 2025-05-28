@@ -1,0 +1,7 @@
+stages:
+  - deploy
+
+deploy:
+  script:
+    - terraform init
+    - terraform apply -auto-approve
