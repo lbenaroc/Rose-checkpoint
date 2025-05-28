@@ -1,7 +1,27 @@
 stages:
-  - deploy
+  - plan
+  - apply
 
-deploy:
+variables:
+  TF_ROOT: terraform
+  TF_VAR_project_name: "cloud-api"
+  AWS_DEFAULT_REGION: "us-east-1"
+
+before_script:
+  - cd $TF_ROOT
+  - terraform init
+
+plan:
+  stage: plan
   script:
-    - terraform init
-    - terraform apply -auto-approve
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - terraform/tfplan
+
+apply:
+  stage: apply
+  script:
+    - terraform apply -auto-approve tfplan
+  when: manual
+  
